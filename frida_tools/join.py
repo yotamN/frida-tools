@@ -51,7 +51,12 @@ def main():
 
         def _start(self):
             self._update_status("Joining portal...")
-            self._session.join_portal(self._location, **self._options)
+            try:
+                self._session.join_portal(self._location, **self._options)
+            except Exception as e:
+                self._update_status("Unable to join: " + str(e))
+                self._exit(1)
+                return
             self._update_status("Joined!")
             self._exit(0)
 
