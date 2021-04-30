@@ -23,11 +23,14 @@ def main():
                     metavar="CERTIFICATE", type='string', action='store', dest="portal_certificate", default=None)
             parser.add_option("--portal-token", help="authenticate with portal using TOKEN",
                     metavar="TOKEN", type='string', action='store', dest="portal_token", default=None)
+            parser.add_option("--portal-acl-allow", help="limit portal access to control channels with TAG",
+                    metavar="TAG", type='string', action='append', dest="portal_acl", default=None)
 
         def _initialize(self, parser, options, args):
             location = args[0] if len(args) >= 1 else options.portal_location
             certificate = args[1] if len(args) >= 2 else options.portal_certificate
             token = args[2] if len(args) >= 3 else options.portal_token
+            acl = options.portal_acl
 
             if location is None:
                 parser.error('portal location must be specified')
@@ -37,6 +40,8 @@ def main():
                 options['certificate'] = certificate
             if token is not None:
                 options['token'] = token
+            if acl is not None:
+                options['acl'] = acl
 
             self._location = location
             self._options = options
