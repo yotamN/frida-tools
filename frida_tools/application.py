@@ -105,6 +105,9 @@ class ConsoleApplication(object):
                     metavar="CERTIFICATE", type='string', action='store', dest="certificate", default=None)
             parser.add_option("--token", help="authenticate with HOST using TOKEN",
                     metavar="TOKEN", type='string', action='store', dest="token", default=None)
+            parser.add_option("--keepalive-interval",
+                    help="set keepalive interval in seconds, or 0 to disable (defaults to -1 to auto-select based on transport)",
+                    metavar="INTERVAL", type='int', action='store', dest="keepalive_interval", default=None)
             parser.add_option("--p2p", help="establish a peer-to-peer connection with target",
                     action='store_const', const='p2p', dest="session_transport", default="multiplexed")
             parser.add_option("--stun-server", help="set STUN server ADDRESS to use with --p2p",
@@ -157,6 +160,7 @@ class ConsoleApplication(object):
             self._host = options.host
             self._certificate = options.certificate
             self._token = options.token
+            self._keepalive_interval = options.keepalive_interval
             self._session_transport = options.session_transport
             self._stun_server = options.stun_server
             self._relays = relays
@@ -166,6 +170,7 @@ class ConsoleApplication(object):
             self._host = None
             self._certificate = None
             self._token = None
+            self._keepalive_interval = None
             self._session_transport = 'multiplexed'
             self._stun_server = None
             self._relays = None
@@ -306,6 +311,8 @@ class ConsoleApplication(object):
                 options['certificate'] = self._certificate
             if self._token is not None:
                 options['token'] = self._token
+            if self._keepalive_interval is not None:
+                options['keepalive_interval'] = self._keepalive_interval
 
             if host is None and len(options) == 0:
                 self._device = frida.get_remote_device()
